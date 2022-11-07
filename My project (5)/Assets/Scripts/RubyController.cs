@@ -24,6 +24,7 @@ public class RubyController : MonoBehaviour
     public AudioClip hitSound;
     public AudioClip winSong;
     public AudioClip loseSong;
+    public GameObject backgroundSong;
 
     public int health { get { return currentHealth; } }
     int currentHealth;
@@ -48,12 +49,12 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
         audioSource = GetComponent<AudioSource>();
-        value.text = score.ToString();
-        winText.SetActive(false);
+        value.text = "Fixed Robots: " + score.ToString() + "/6";
         loseText.SetActive(false);
+        winText.SetActive(false);
         gameOver = false;
         cogs = 4;
-        Cogs.text = cogs.ToString();
+        Cogs.text = "Cogs:" + cogs.ToString();
     }
 
     // Update is called once per frame
@@ -99,9 +100,32 @@ public class RubyController : MonoBehaviour
                     {
                         character.DisplayDialog();
                     }
+                    else if (gameOver == true)
+                    {
+                        SceneManager.LoadScene("Level2");
+                        backgroundSong.SetActive(true);
+                    }
 
                 }
             }
+        }
+        if (Input.GetKeyDown(KeyCode.R) && (gameOver == true))
+        {
+                if (score < 6 && SceneManager.GetActiveScene().name == "Level2")
+                {
+                    SceneManager.LoadScene("Level2");
+                    backgroundSong.SetActive(true);
+                    gameOver = false;
+                }
+                else
+                {
+                    SceneManager.LoadScene("Main");
+                    backgroundSong.SetActive(true);
+                    gameOver = false;
+                }
+                
+
+
         }
 
     }
@@ -142,6 +166,7 @@ public class RubyController : MonoBehaviour
         {
             loseText.SetActive(true);
             Destroy(rigidbody2d);
+            backgroundSong.SetActive(false);
             gameOver = true;
             PlaySound(loseSong);
         }
@@ -155,7 +180,13 @@ public class RubyController : MonoBehaviour
         {
             winText.SetActive(true);
             gameOver = true;
+            
+        }
+        if (score >= 8)
+        {
+            backgroundSong.SetActive(false);
             PlaySound(winSong);
+            gameOver = true;
         }
 
     }
@@ -189,4 +220,5 @@ public class RubyController : MonoBehaviour
     {
         audioSource.PlayOneShot(clip);
     }
+    
 }
