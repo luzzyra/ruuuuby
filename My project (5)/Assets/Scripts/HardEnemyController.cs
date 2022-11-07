@@ -10,6 +10,7 @@ public class HardEnemyController : MonoBehaviour
 
     public ParticleSystem smokeEffect;
 
+    private RubyController rubyController;
     Rigidbody2D rigidbody2D;
     float timer;
     int direction = 1;
@@ -23,7 +24,11 @@ public class HardEnemyController : MonoBehaviour
         rigidbody2D = GetComponent<Rigidbody2D>();
         timer = changeTime;
         animator = GetComponent<Animator>();
-
+        GameObject rubyControllerObject = GameObject.FindWithTag("RubyController");
+        if (rubyControllerObject != null)
+        {
+            rubyController = rubyControllerObject.GetComponent<RubyController>();
+        }
     }
 
     void Update()
@@ -94,6 +99,8 @@ public class HardEnemyController : MonoBehaviour
         //optional if you added the fixed animation
         animator.SetTrigger("Fixed");
         smokeEffect.Stop();
+        rubyController.ChangeScore(1);
+        
 
     }
 }
